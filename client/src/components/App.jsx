@@ -19,7 +19,7 @@ class App extends React.Component {
       //}
     );
 
-    console.log(response);
+    console.log(response.data);
 
     this.setState({ rides: response.data });
   };
