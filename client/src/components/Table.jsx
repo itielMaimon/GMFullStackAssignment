@@ -1,41 +1,55 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
+import useSortableData from "../hooks/useSortableData";
 import "./Table.css";
 
 const Table = ({ rides }) => {
-  const itemsPerPage = 140;
+  const { items, requestSort, sortConfig } = useSortableData(rides);
+  const headers = [
+    { title: "Id", key: "id" },
+    { title: "Vehicle Name", key: "vehicle_name" },
+    { title: "Location", key: "location" },
+    { title: "Date", key: "date" },
+    { title: "Lightning Conditions", key: "lightning_conditions" },
+    { title: "Objective", key: "objective" },
+    { title: "Recordings Path", key: "recordings_path" },
+    { title: "Road Conditions", key: "road_conditions" },
+    { title: "Road Topology", key: "road_topology" },
+    { title: "Scenario Name", key: "scenario_name" },
+    { title: "Weather", key: "weather" },
+  ];
 
-  const [ridesIndex, setRidesIndex] = useState(0);
-  const [currentRides, setCurrentRides] = useState([]);
-  const [sortOrder, setSortOrder] = useState(false);
+  // const itemsPerPage = 140;
 
-  useEffect(() => {
-    console.log(ridesIndex);
-    console.log(currentRides);
-  }, [currentRides]);
+  // const [ridesIndex, setRidesIndex] = useState(0);
+  // const [currentRides, setCurrentRides] = useState([]);
+
+  const renderHeader = (title, key) => {
+    return (
+      <th
+        className={sortClassName(key)}
+        key={key}
+        onClick={() => requestSort(key)}
+      >
+        {truncateString(title, 12)}
+      </th>
+    );
+  };
 
   const renderRow = (ride) => {
     return (
       <tr key={ride.id}>
-        {renderColumn("Id", ride.id)}
-        {renderColumn("Vehicle Name", ride.vehicle_name)}
-        {renderColumn("Location", ride.location)}
-        {renderColumn("Date", ride.date)}
-        {renderColumn("Ligtning Conditions", ride.lightning_conditions)}
-        {renderColumn("Objective", ride.objective)}
-        {renderColumn("Recordings Path", ride.recordings_path)}
-        {renderColumn("Road Conditions", ride.road_conditions)}
-        {renderColumn("Road Topology", ride.road_topology)}
-        {renderColumn("Secenario Name", ride.scenario_name)}
-        {renderColumn("Weather", ride.weather)}
+        {headers.map((header) => {
+          return renderColumn(header.title, ride[header.key]);
+        })}
       </tr>
     );
   };
 
   const renderColumn = (label, content) => {
     return (
-      <td data-label={label}>
-        {content.length > 15 ? (
-          <div data-title={content}>{truncate(content)}</div>
+      <td key={label} data-label={label}>
+        {content.length > 10 ? (
+          <div data-title={content}>{truncateString(content, 10)}</div>
         ) : (
           content
         )}
@@ -43,62 +57,31 @@ const Table = ({ rides }) => {
     );
   };
 
-  const truncate = (str) => {
-    return str.length > 15 ? str.substring(0, 12) + "..." : str;
+  const sortClassName = (name) => {
+    if (!sortConfig) {
+      return;
+    }
+    return sortConfig.key === name
+      ? `sorted ${sortConfig.direction}`
+      : undefined;
   };
 
-  const onSortClick = (property) => {
-    if (!sortOrder) {
-      property = "-" + property;
-    }
-    setCurrentRides([...currentRides.sort(dynamicSort(property))]);
-    setSortOrder(!sortOrder);
-  };
-
-  const dynamicSort = (property) => {
-    var sortOrder = 1;
-    if (property[0] === "-") {
-      sortOrder = -1;
-      property = property.substr(1);
-    }
-    return function (a, b) {
-      /* next line works with strings and numbers,
-       * and you may want to customize it to your needs
-       */
-      var result =
-        a[property] < b[property] ? -1 : a[property] > b[property] ? 1 : 0;
-      return result * sortOrder;
-    };
+  const truncateString = (str, maxLength) => {
+    return str.length > maxLength
+      ? str.substring(0, maxLength - 3) + "..."
+      : str;
   };
 
   return (
     <div>
-      <table className="ui celled padded table">
+      <table className="ui compact sortable stackable celled table">
         <thead>
           <tr>
-            <th>
-              <div className="ui column grid">
-                <div className="column">Id</div>
-                <i
-                  onClick={() => onSortClick("id")}
-                  className={`${sortOrder ? "up" : "down"} chevron icon column`}
-                ></i>
-              </div>
-            </th>
-            <th>Vehicle Name</th>
-            <th>Location</th>
-            <th>Date</th>
-            <th>Ligtning Conditions</th>
-            <th>Objective</th>
-            <th>Recordings Path</th>
-            <th>Road Conditions</th>
-            <th>Road Topology</th>
-            <th>Secenario Name</th>
-            <th>Weather</th>
+            {headers.map((header) => renderHeader(header.title, header.key))}
           </tr>
         </thead>
-        <tbody>{currentRides.map((ride) => renderRow(ride))}</tbody>
-        <tfoot>
+        <tbody>{items.map((item) => renderRow(item))}</tbody>
+        {/* <tfoot> 
           <tr>
             <th colSpan="11">
               <div className="ui right floated pagination menu">
@@ -112,7 +95,7 @@ const Table = ({ rides }) => {
                     }
 
                     setCurrentRides(
-                      rides.slice(newIndex, newIndex + itemsPerPage)
+                      items.slice(newIndex, newIndex + itemsPerPage)
                     );
                   }}
                 >
@@ -122,17 +105,17 @@ const Table = ({ rides }) => {
                   className="icon item"
                   onClick={() => {
                     let newIndex = ridesIndex;
-                    if (ridesIndex < rides.length - itemsPerPage) {
+                    if (ridesIndex < items.length - itemsPerPage) {
                       newIndex += itemsPerPage;
                       setRidesIndex(newIndex);
                     }
 
                     // I case of rides lengtn not divided by itemsPerPage
-                    if (newIndex + itemsPerPage > rides.length) {
-                      setCurrentRides(rides.slice(newIndex, rides.length));
+                    if (newIndex + itemsPerPage > items.length) {
+                      setCurrentRides(items.slice(newIndex, items.length));
                     } else {
                       setCurrentRides(
-                        rides.slice(newIndex, newIndex + itemsPerPage)
+                        items.slice(newIndex, newIndex + itemsPerPage)
                       );
                     }
                   }}
@@ -142,7 +125,7 @@ const Table = ({ rides }) => {
               </div>
             </th>
           </tr>
-        </tfoot>
+        </tfoot> */}
       </table>
     </div>
   );
