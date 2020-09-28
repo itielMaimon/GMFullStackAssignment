@@ -1,9 +1,12 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { connect } from "react-redux";
+import { fetchRides } from "../actions";
 import useSortableData from "../hooks/useSortableData";
+import FilterPanel from "./FilterPanel";
 import "./Table.css";
 
-const Table = ({ rides }) => {
-  const { items, requestSort, sortConfig } = useSortableData(rides);
+const Table = ({ filteredItems, fetchRides }) => {
+  const { items, requestSort, sortConfig } = useSortableData(filteredItems);
   const headers = [
     { title: "Id", key: "id" },
     { title: "Vehicle Name", key: "vehicle_name" },
@@ -18,6 +21,10 @@ const Table = ({ rides }) => {
     { title: "Weather", key: "weather" },
   ];
 
+  useEffect(() => {
+    fetchRides();
+  }, [fetchRides]);
+
   // const itemsPerPage = 140;
 
   // const [ridesIndex, setRidesIndex] = useState(0);
@@ -31,6 +38,7 @@ const Table = ({ rides }) => {
         onClick={() => requestSort(key)}
       >
         {truncateString(title, 12)}
+        <FilterPanel filterKey={key} />
       </th>
     );
   };
@@ -38,16 +46,16 @@ const Table = ({ rides }) => {
   const renderRow = (ride) => {
     return (
       <tr key={ride.id}>
-        {headers.map((header) => {
-          return renderColumn(header.title, ride[header.key]);
+        {headers.map((header, i) => {
+          return renderColumn(ride.id + i, header.title, ride[header.key]);
         })}
       </tr>
     );
   };
 
-  const renderColumn = (label, content) => {
+  const renderColumn = (id, label, content) => {
     return (
-      <td key={label} data-label={label}>
+      <td key={id} data-label={label}>
         {content.length > 10 ? (
           <div data-title={content}>{truncateString(content, 10)}</div>
         ) : (
@@ -131,4 +139,10 @@ const Table = ({ rides }) => {
   );
 };
 
-export default Table;
+const mapStateToProps = (state) => {
+  return {
+    filteredItems: state.filteredItems,
+  };
+};
+
+export default connect(mapStateToProps, { fetchRides })(Table);
