@@ -1,9 +1,11 @@
 import React from "react";
+import { connect } from "react-redux";
 import DeckGL from "@deck.gl/react";
 import { PathLayer } from "@deck.gl/layers";
 import { StaticMap } from "react-map-gl";
 import { Link } from "react-router-dom";
 import Modal from "./Modal";
+import { fetchCoordinates } from "../actions";
 import history from "../history";
 import "mapbox-gl/dist/mapbox-gl.css";
 
@@ -12,25 +14,12 @@ const MAPBOX_ACCESS_TOKEN =
 
 // Viewport settings
 const INITIAL_VIEW_STATE = {
-  longitude: -122.41669,
-  latitude: 37.7853,
+  longitude: -83.06553,
+  latitude: 42.5167,
   zoom: 13,
   pitch: 0,
   bearing: 0,
 };
-
-// Data to be used by the PathLayer
-const data = [
-  {
-    path: [
-      [-122.4, 37.7],
-      [-122.5, 37.8],
-      [-122.6, 37.85],
-    ],
-    name: "Richmond - Millbrae",
-    color: "#ed1c24",
-  },
-];
 
 const hexToRgb = (hex) => {
   var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
@@ -43,7 +32,26 @@ const hexToRgb = (hex) => {
     : [0, 0, 0];
 };
 
-const renderContent = () => {
+const renderContent = (coordinates, id) => {
+  if (coordinates.length === 0) {
+    return (
+      <div style={{ height: "50vh" }} class="ui segment">
+        <div class="ui active dimmer">
+          <div class="ui loader"></div>
+        </div>
+      </div>
+    );
+  }
+
+  // Data to be used by the PathLayer
+  const data = [
+    {
+      path: coordinates,
+      name: `Ride ${id}`,
+      color: "#4f551a",
+    },
+  ];
+
   const pathLayer = new PathLayer({
     id: "path-layer",
     data,
@@ -52,7 +60,7 @@ const renderContent = () => {
     widthMinPixels: 2,
     getPath: (d) => d.path,
     getColor: (d) => hexToRgb(d.color),
-    getWidth: (d) => 5,
+    getWidth: (d) => 2,
   });
 
   return (
@@ -84,15 +92,29 @@ const renderActions = () => {
   );
 };
 
-const RidePreview = () => {
+const RidePreview = ({ coordinates, match, fetchCoordinates }) => {
+  // Getting the id from the url params.
+  const { id } = match.params;
+
+  // Check if the coordinates have already been fetched (same coordinates for all rides).
+  if (!Array.isArray(coordinates) || !coordinates.length) {
+    fetchCoordinates(id);
+  }
+
   return (
     <Modal
       title="Ride Preview"
-      content={renderContent()}
+      content={renderContent(coordinates, id)}
       actions={renderActions()}
       onDismiss={() => history.push("/")}
     />
   );
 };
 
-export default RidePreview;
+const mapStateToProps = (state) => {
+  return {
+    coordinates: state.coordinates,
+  };
+};
+
+export default connect(mapStateToProps, { fetchCoordinates })(RidePreview);

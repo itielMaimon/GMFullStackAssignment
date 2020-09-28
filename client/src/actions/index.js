@@ -15,7 +15,7 @@ export const fetchRides = () => async (dispatch) => {
   dispatch({ type: FETCH_RIDES, payload: response.data });
 };
 
-export const fetchCoordinates = async (dispatch) => {
+export const fetchCoordinates = (id) => async (dispatch) => {
   const response = await ride.get("/coordinates");
 
   dispatch({ type: FETCH_COORDINATES, payload: response.data });
