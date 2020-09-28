@@ -18,23 +18,30 @@ const FilterPanel = ({ filterKey, items, addFilter, removeFilter }) => {
     return items.map((item) => item[key]);
   };
 
+  const truncateString = (str, maxLength) => {
+    return str.length > maxLength
+      ? str.substring(0, maxLength - 3) + "..."
+      : str;
+  };
+
   return (
-    <Dropdown multiple icon="filter">
+    <Dropdown style={{ padding: 0, paddingLeft: 5 }} multiple icon="filter">
       <Dropdown.Menu onClick={(e) => e.stopPropagation()}>
-        <Input icon="search" iconPosition="left" className="search" />
+        {/* <Input icon="search" iconPosition="left" className="search" /> */}
         <Dropdown.Divider />
         <Dropdown.Header icon="tags" content={filterKey} />
         <Dropdown.Menu scrolling>
           {[...new Set(getItemsByKey(items, filterKey))].map((item, i) => (
             <Dropdown.Item key={i}>
-              <label>
+              <div className="ui checkbox">
                 <input
                   type="checkbox"
                   defaultChecked
+                  name={item}
                   onClick={(event) => handleChange(event, filterKey, item)}
                 />
-                {item}
-              </label>
+                <label>{truncateString(item, 15)}</label>
+              </div>
             </Dropdown.Item>
           ))}
         </Dropdown.Menu>

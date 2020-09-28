@@ -37,7 +37,7 @@ const Table = ({ filteredItems, fetchRides }) => {
         key={key}
         onClick={() => requestSort(key)}
       >
-        {truncateString(title, 12)}
+        {truncateString(title, 10)}
         <FilterPanel filterKey={key} />
       </th>
     );
