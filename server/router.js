@@ -4,15 +4,17 @@ const bodyParser = require("body-parser");
 const fs = require("fs").promises;
 const Ride = require("./models/ride");
 
-const fileName = "./db/metadata.json";
+const metadata = "./db/metadata.json";
+const gps_coordinates = "./db/gps_coordinates.json";
 
 const initialRides = [];
+const initialCoordinates = [];
 
-const store = {
+const metadataStore = {
   async read() {
     try {
-      await fs.access(fileName);
-      this.rides = JSON.parse((await fs.readFile(fileName)).toString());
+      await fs.access(metadata);
+      this.rides = JSON.parse((await fs.readFile(metadata)).toString());
     } catch (e) {
       this.rides = initialRides;
     }
@@ -41,6 +43,23 @@ const store = {
   rides: [],
 };
 
+const coordinatesStore = {
+  async read() {
+    try {
+      await fs.access(gps_coordinates);
+      this.coordinates = JSON.parse(
+        (await fs.readFile(gps_coordinates)).toString()
+      );
+    } catch (e) {
+      this.coordinates = initialCoordinates;
+    }
+
+    return this.coordinates;
+  },
+
+  coordinates: [],
+};
+
 router.get("/", (req, res) => {
   res.send("Server is up and running");
 });
@@ -48,7 +67,11 @@ router.get("/", (req, res) => {
 router.get("/rides", async (req, res) => {
   //   const rideList = await Ride.find().sort({ date: -1 }).limit(5);
   //   res.json({ rides: rideList });
-  res.json(await store.read());
+  res.json(await metadataStore.read());
+});
+
+router.get("/coordinates", async (req, res) => {
+  res.json(await coordinatesStore.read());
 });
 
 module.exports = router;

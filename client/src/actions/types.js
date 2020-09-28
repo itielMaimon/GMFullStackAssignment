@@ -1,4 +1,5 @@
 export const FETCH_RIDES = "FETCH_RIDES";
+export const FETCH_COORDINATES = "FETCH_COORDINATES";
 export const ADD_FILTER = "ADD_FILTER";
 export const REMOVE_FILTER = "REMOVE_FILTER";
 export const FILTER_TABLE_ADD = "FILTER_TABLE_ADD";

@@ -1,5 +1,6 @@
 import {
   FETCH_RIDES,
+  FETCH_COORDINATES,
   ADD_FILTER,
   REMOVE_FILTER,
   FILTER_TABLE_ADD,
@@ -12,6 +13,12 @@ export const fetchRides = () => async (dispatch) => {
   const response = await ride.get("/rides");
 
   dispatch({ type: FETCH_RIDES, payload: response.data });
+};
+
+export const fetchCoordinates = async (dispatch) => {
+  const response = await ride.get("/coordinates");
+
+  dispatch({ type: FETCH_COORDINATES, payload: response.data });
 };
 
 export const addFilter = (key, value) => (dispatch) => {

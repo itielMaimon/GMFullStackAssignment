@@ -10,7 +10,7 @@ const Modal = ({ title, content, actions, onDismiss }) => {
       >
         <i onClick={onDismiss} className="close icon"></i>
         <div className="header">{title}</div>
-        <div className="content">{content}</div>
+        <div className="scrolling content">{content}</div>
         <div className="actions">{actions}</div>
       </div>
     </div>,
