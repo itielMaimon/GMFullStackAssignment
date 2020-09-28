@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import { fetchRides } from "../actions";
 import useSortableData from "../hooks/useSortableData";
 import FilterPanel from "./FilterPanel";
+import history from "../history";
 import "./Table.css";
 
 const Table = ({ filteredItems, fetchRides }) => {
@@ -45,7 +46,7 @@ const Table = ({ filteredItems, fetchRides }) => {
 
   const renderRow = (ride) => {
     return (
-      <tr key={ride.id}>
+      <tr onClick={() => history.push(`/rides/${ride.id}`)} key={ride.id}>
         {headers.map((header, i) => {
           return renderColumn(ride.id + i, header.title, ride[header.key]);
         })}
