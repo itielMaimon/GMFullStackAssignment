@@ -3,7 +3,11 @@ import ReactDOM from "react-dom";
 
 const Modal = ({ title, content, actions, onDismiss }) => {
   return ReactDOM.createPortal(
-    <div onClick={onDismiss} className="ui dimmer modals visible active">
+    <div
+      onClick={onDismiss}
+      className="ui dimmer modals visible active"
+      style={{ position: "fixed" }}
+    >
       <div
         onClick={(e) => e.stopPropagation()}
         className="ui standard modal visible active"

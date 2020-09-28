@@ -1,23 +1,56 @@
 [data-title] {
   position: relative;
+  word-wrap: break-word;
 }
 
 [data-title]:hover::before {
   content: attr(data-title);
   z-index: 1;
   position: absolute;
+  width: 200%;
   padding: 10px;
   background: #fff;
   color: #000;
   font-size: 14px;
-  white-space: nowrap;
+  white-space: initial;
+  top: 100%;
+  left: 50%;
+  margin-left: -100%;
+  text-align: center;
   border-radius: 10px;
   -webkit-box-shadow: 1px 1px 2px 3px #ccc; /* Safari 3-4, iOS 4.0.2 - 4.2, Android 2.3+ */
   -moz-box-shadow: 1px 1px 2px 3px #ccc; /* Firefox 3.5 - 3.6 */
   box-shadow: 1px 1px 2px 3px #ccc; /* Opera 10.5, IE 9, Firefox 4+, Chrome 6+, iOS 5 */
 }
 
+/* th {
+  position: sticky;
+  z-index: 2;
+  top: 0;
+  background: white;
+} */
+
 tr:hover {
   background: rgb(235, 235, 235);
   cursor: pointer;
+}
+
+/* Scrollbar Width */
+::-webkit-scrollbar {
+  width: 5px;
+}
+
+/* Scrollbar Track */
+::-webkit-scrollbar-track {
+  background: #bbbbbb;
+}
+
+/* Scrollbar Handle */
+::-webkit-scrollbar-thumb {
+  background: #616d7a;
+}
+
+/* Scrollbar Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #2b3b4d;
 }

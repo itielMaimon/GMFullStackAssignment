@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { connect } from "react-redux";
 import DeckGL from "@deck.gl/react";
 import { PathLayer } from "@deck.gl/layers";
@@ -35,9 +35,9 @@ const hexToRgb = (hex) => {
 const renderContent = (coordinates, id) => {
   if (coordinates.length === 0) {
     return (
-      <div style={{ height: "50vh" }} class="ui segment">
-        <div class="ui active dimmer">
-          <div class="ui loader"></div>
+      <div style={{ height: "50vh" }} className="ui segment">
+        <div className="ui active dimmer">
+          <div className="ui loader"></div>
         </div>
       </div>
     );
@@ -93,6 +93,12 @@ const renderActions = () => {
 };
 
 const RidePreview = ({ coordinates, match, fetchCoordinates }) => {
+  // Hide the table's scrollbar.
+  useEffect(() => {
+    document.body.style.overflow = "hidden";
+    return () => (document.body.style.overflow = "initial");
+  }, []);
+
   // Getting the id from the url params.
   const { id } = match.params;
 
