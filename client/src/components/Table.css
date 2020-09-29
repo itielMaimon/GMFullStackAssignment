@@ -35,6 +35,18 @@ tr:hover {
   cursor: pointer;
 }
 
+/* .ui.sortable.table thead th.sorted {
+  background: rgb(235, 235, 235);
+}
+
+.ui.sortable.table thead th:hover {
+  background: rgba(245, 245, 245);
+}
+
+.ui.sortable.table thead th.sorted:hover {
+  background: rgba(245, 245, 245);
+} */
+
 /* Scrollbar Width */
 ::-webkit-scrollbar {
   width: 5px;

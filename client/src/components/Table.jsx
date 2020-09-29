@@ -6,7 +6,7 @@ import FilterPanel from "./FilterPanel";
 import history from "../history";
 import "./Table.css";
 
-const Table = ({ filteredItems, fetchRides }) => {
+const Table = ({ allItems, filteredItems, fetchRides }) => {
   const { items, requestSort, sortConfig } = useSortableData(filteredItems);
   const headers = [
     { title: "Id", key: "id" },
@@ -81,6 +81,14 @@ const Table = ({ filteredItems, fetchRides }) => {
       : str;
   };
 
+  if (!Array.isArray(allItems) || !allItems.length) {
+    return (
+      <div className="ui active inverted dimmer">
+        <div className="ui text loader">Loading Table</div>
+      </div>
+    );
+  }
+
   return (
     <div>
       <table className="ui compact sortable stackable celled table">
@@ -136,12 +144,16 @@ const Table = ({ filteredItems, fetchRides }) => {
           </tr>
         </tfoot> */}
       </table>
+      {items.length === 0 ? (
+        <div className="ui center aligned segment">No items found</div>
+      ) : null}
     </div>
   );
 };
 
 const mapStateToProps = (state) => {
   return {
+    allItems: state.items,
     filteredItems: state.filteredItems,
   };
 };

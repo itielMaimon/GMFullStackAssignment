@@ -1,7 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import { addFilter, removeFilter } from "../actions";
-import { Dropdown, Input } from "semantic-ui-react";
+import { Dropdown } from "semantic-ui-react";
 
 const FilterPanel = ({ filterKey, items, addFilter, removeFilter }) => {
   const handleChange = ({ target }, key, value) => {
