@@ -65,13 +65,40 @@ router.get("/", (req, res) => {
 });
 
 router.get("/rides", async (req, res) => {
-  //   const rideList = await Ride.find().sort({ date: -1 }).limit(5);
-  //   res.json({ rides: rideList });
   res.json(await metadataStore.read());
 });
 
-router.get("/coordinates", async (req, res) => {
-  res.json(await coordinatesStore.read());
+router.get("/coordinates/:id", async (req, res) => {
+  // Usually we'd use req.params.id to get matched coors.
+  // However, in this assignment, the same coors match all ids.
+
+  // Default max speed and fps values.
+  const maxSpeed = 110;
+  const fps = 100;
+
+  // Calculate the distance between two coors in meters.
+  const metersPerCoor = maxSpeed / 3.6 / fps;
+  console.log(metersPerCoor);
+
+  // Calculate the coors delta; How many coors should be returned by vehicle velocity and fps.
+  let coorsDelta = 1;
+
+  // Get a coordinate for every 2 meters.
+  if (metersPerCoor < 2) {
+    coorsDelta = Math.round(2 / metersPerCoor);
+  }
+  console.log(coorsDelta);
+
+  const coordinates = await coordinatesStore.read();
+  const reducedCoordinates = [];
+
+  // Avoiding using filter because we don't want to loop over all the elements.
+  // We instead access the coors directly with a for loop.
+  for (i = 0; i < coordinates.length; i = i + coorsDelta) {
+    reducedCoordinates.push(coordinates[i]);
+  }
+
+  res.json(reducedCoordinates);
 });
 
 module.exports = router;
