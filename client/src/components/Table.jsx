@@ -26,11 +26,6 @@ const Table = ({ allItems, filteredItems, fetchRides }) => {
     fetchRides();
   }, [fetchRides]);
 
-  // const itemsPerPage = 140;
-
-  // const [ridesIndex, setRidesIndex] = useState(0);
-  // const [currentRides, setCurrentRides] = useState([]);
-
   const renderHeader = (title, key) => {
     return (
       <th

@@ -10,12 +10,14 @@ export default (state = [], action) => {
     case FETCH_RIDES:
       return action.payload;
     case FILTER_TABLE_ADD:
+      // Taking previously filtered items and adding new filter.
       return [
         ...action.payload.filteredItems.filter(
           (item) => item[action.payload.key] !== action.payload.value
         ),
       ];
     case FILTER_TABLE_REMOVE:
+      // Taking previously filtered items, and adding items from total items in accordance with existing filters.
       const filters = action.payload.filters;
       const checkFilters = (item) => {
         var shouldAdd = true;
