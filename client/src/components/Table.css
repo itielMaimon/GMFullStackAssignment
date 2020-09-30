@@ -1,3 +1,7 @@
+body {
+  overflow: initial;
+}
+
 [data-title] {
   position: relative;
   word-wrap: break-word;
