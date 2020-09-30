@@ -98,51 +98,6 @@ const Table = ({ allItems, filteredItems, fetchRides }) => {
           </tr>
         </thead>
         <tbody>{items.map((item) => renderRow(item))}</tbody>
-        {/* <tfoot> 
-          <tr>
-            <th colSpan="11">
-              <div className="ui right floated pagination menu">
-                <a
-                  className="icon item"
-                  onClick={() => {
-                    let newIndex = ridesIndex;
-                    if (ridesIndex > 0) {
-                      newIndex -= itemsPerPage;
-                      setRidesIndex(newIndex);
-                    }
-
-                    setCurrentRides(
-                      items.slice(newIndex, newIndex + itemsPerPage)
-                    );
-                  }}
-                >
-                  <i className="left chevron icon"></i>
-                </a>
-                <a
-                  className="icon item"
-                  onClick={() => {
-                    let newIndex = ridesIndex;
-                    if (ridesIndex < items.length - itemsPerPage) {
-                      newIndex += itemsPerPage;
-                      setRidesIndex(newIndex);
-                    }
-
-                    // I case of rides lengtn not divided by itemsPerPage
-                    if (newIndex + itemsPerPage > items.length) {
-                      setCurrentRides(items.slice(newIndex, items.length));
-                    } else {
-                      setCurrentRides(
-                        items.slice(newIndex, newIndex + itemsPerPage)
-                      );
-                    }
-                  }}
-                >
-                  <i className="right chevron icon"></i>
-                </a>
-              </div>
-            </th>
-          </tr>
-        </tfoot> */}
       </table>
       {items.length === 0 ? (
         <div className="ui center aligned segment">No items found</div>
